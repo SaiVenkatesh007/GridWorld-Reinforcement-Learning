@@ -16,10 +16,16 @@ def path_visualization(env, path):
     for obstacle in env.obstacles:
         grid[obstacle[0], obstacle[1]] = -1
     for state in path:
-        grid[state[0], state[1]] = -1
+        grid[state[0], state[1]] = 1
     grid[env.start[0], env.start[1]] = 0.5
     grid[env.goal[0], env.goal[1]] = 0.5
-    plt.imshow(grid, cmap='viridis', origin='lower')
+    
+    cmap = plt.cm.viridis
+    cmap.set_under('red')
+    cmap.set_over('blue')
+    
+    masked_array = np.ma.masked_where(grid == 0, grid)
+    plt.imshow(masked_array, cmap=cmap, origin='lower', vmin=0.01, vmax=0.99)
     plt.pause(0.5)
     plt.draw()
     plt.clf()
