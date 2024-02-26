@@ -20,7 +20,9 @@ def path_visualization(env, path):
     grid[env.start[0], env.start[1]] = 0.5
     grid[env.goal[0], env.goal[1]] = 0.5
     plt.imshow(grid, cmap='viridis', origin='lower')
-    plt.show()
+    plt.pause(0.5)
+    plt.draw()
+    plt.clf()
 
 def test_agent(agent, env, episodes=100, visualize=False):
     total_rewards = []
@@ -28,14 +30,16 @@ def test_agent(agent, env, episodes=100, visualize=False):
         state = env.reset()
         finished = False
         total_reward = 0
-        path = [state]
+        path = []
         while not finished:
             action = agent.action_choice(state)
             next_state, reward, finished = env.step(env.actions[action])
             total_reward += reward
             state = next_state
             path.append(state)
+            if visualize and state is not None:
+                path.append(state)
         total_rewards.append(total_reward)
         if visualize:
             path_visualization(env, path)
-    return total_rewards
+    return total_rewards, path
